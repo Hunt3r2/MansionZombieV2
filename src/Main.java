@@ -12,6 +12,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.border.LineBorder;
 public class Main extends JFrame{
     private int CantidadDeHabitaciones;
     private int HabitacionesPasadas;
@@ -23,6 +27,7 @@ public class Main extends JFrame{
     
     
     public Main(int cantidadDeHabitaciones) {
+    	setResizable(false);
         this.CantidadDeHabitaciones = 5;
         this.HabitacionesPasadas = 1;
         this.zombies = 1;
@@ -30,7 +35,7 @@ public class Main extends JFrame{
         this.superviviente = new Superviviente();
 
         setTitle("Menú de Juego");
-        setSize(549, 385);
+        setSize(543, 380);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
@@ -38,21 +43,50 @@ public class Main extends JFrame{
         
         
                 JButton historicoButton = new JButton("Ver histórico");
+                historicoButton.setFocusable(false);
+                historicoButton.setBackground(new Color(102, 153, 204));
+                historicoButton.setBorder(new LineBorder(new Color(0, 51, 153), 2, true));
                 historicoButton.setBounds(24, 198, 147, 23);
                 getContentPane().add(historicoButton);
                 
                         JButton cargarButton = new JButton("Cargar partida");
+                        cargarButton.setFocusable(false);
+                        cargarButton.setBackground(new Color(102, 153, 204));
+                        cargarButton.setBorder(new LineBorder(new Color(0, 51, 153), 2, true));
                         cargarButton.setBounds(24, 164, 147, 23);
                         getContentPane().add(cargarButton);
                         
                                 JButton jugarButton = new JButton("Jugar");
+                                jugarButton.setFocusable(false);
+                                jugarButton.setBackground(new Color(102, 153, 204));
+                                jugarButton.setBorder(new LineBorder(new Color(0, 51, 153), 2, true));
                                 jugarButton.setBounds(24, 130, 147, 23);
                                 getContentPane().add(jugarButton);
                                 
                                 JComboBox comboBox = new JComboBox();
+                                comboBox.setFocusable(false);
+                                comboBox.setBackground(new Color(102, 153, 204));
+                                comboBox.setBorder(new LineBorder(new Color(0, 51, 153), 2, true));
                                 comboBox.setModel(new DefaultComboBoxModel(new String[] {"FACIL", "DIFICIL"}));
                                 comboBox.setBounds(181, 130, 84, 22);
                                 getContentPane().add(comboBox);
+                                
+                                JPanel panel = new JPanel();
+                                panel.setBackground(new Color(255, 153, 153));
+                                panel.setForeground(new Color(255, 153, 153));
+                                panel.setBorder(new LineBorder(new Color(255, 215, 0), 3, true));
+                                panel.setBounds(79, 249, 377, 66);
+                                getContentPane().add(panel);
+                                
+                                JLabel lblNewLabel_1 = new JLabel("MANSION ZOMBIE");
+                                panel.add(lblNewLabel_1);
+                                lblNewLabel_1.setFont(new Font("Yu Gothic UI", Font.BOLD, 37));
+                                lblNewLabel_1.setForeground(new Color(128, 0, 0));
+                                
+                                JLabel lblNewLabel = new JLabel("");
+                                lblNewLabel.setIcon(new ImageIcon(Main.class.getResource("/imagenes/25531648-6470-4ef6-b27f-03a68b972078.jpg")));
+                                lblNewLabel.setBounds(0, 0, 533, 346);
+                                getContentPane().add(lblNewLabel);
                                 jugarButton.addActionListener(new ActionListener() {
                                     @Override
                                     public void actionPerformed(ActionEvent e) {

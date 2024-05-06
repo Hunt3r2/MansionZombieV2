@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class Juego extends JDialog {
     private int CantidadDeHabitaciones;
@@ -20,12 +20,16 @@ public class Juego extends JDialog {
     private JButton buscarButton;
     private JButton avanzarButton;
     private JButton curarButton;
-    private JTextArea infoTextArea; // Movido al nivel de la clase
+    private JTextField vidaTextField;
+    private JTextField habitacionesTextField;
+    private JTextField busquedasTextField;
+    private JTextField zombiesTextField;
+    private JTextField textFieldArmaPB;
 
     public Juego(int cantidadDeHabitaciones, JFrame juego) {
-    	this.CantidadDeHabitaciones = cantidadDeHabitaciones;
+        this.CantidadDeHabitaciones = cantidadDeHabitaciones;
         this.HabitacionesPasadas = 0;
-        this.zombies = 1; // Inicializado en 1
+        this.zombies = 1;
         this.RealizadasBusquedas = 0;
         this.superviviente = new Superviviente();
 
@@ -38,10 +42,25 @@ public class Juego extends JDialog {
         setContentPane(panel);
         panel.setLayout(null);
 
-        infoTextArea = new JTextArea(); // Usar JTextArea en lugar de JLabel
-        infoTextArea.setEditable(false); // Deshabilitar la edición del JTextArea
-        infoTextArea.setBounds(10, 30, 634, 60);
-        panel.add(infoTextArea);
+        vidaTextField = new JTextField();
+        vidaTextField.setEditable(false);
+        vidaTextField.setBounds(10, 30, 200, 20);
+        panel.add(vidaTextField);
+
+        habitacionesTextField = new JTextField();
+        habitacionesTextField.setEditable(false);
+        habitacionesTextField.setBounds(220, 30, 200, 20);
+        panel.add(habitacionesTextField);
+
+        busquedasTextField = new JTextField();
+        busquedasTextField.setEditable(false);
+        busquedasTextField.setBounds(10, 58, 200, 20);
+        panel.add(busquedasTextField);
+
+        zombiesTextField = new JTextField();
+        zombiesTextField.setEditable(false);
+        zombiesTextField.setBounds(220, 58, 200, 20);
+        panel.add(zombiesTextField);
 
         fightButton = new JButton("Combatir contra un zombie");
         fightButton.setBounds(20, 209, 207, 23);
@@ -89,7 +108,14 @@ public class Juego extends JDialog {
             }
         });
         panel.add(curarButton);
+        
+        textFieldArmaPB = new JTextField();
+        textFieldArmaPB.setEditable(false);
+        textFieldArmaPB.setBounds(10, 89, 225, 20);
+        panel.add(textFieldArmaPB);
         setVisible(true);
+
+        actualizarInfoFields(); // Actualizar los campos de texto con la información inicial
     }
 
     public void iniciarJuego() {
@@ -109,7 +135,7 @@ public class Juego extends JDialog {
             try {
                 if (!superviviente.Muerte()) {
                     HabitacionesPasadas++; // Se incrementa el contador al entrar a una habitación
-                    actualizarInfoLabel(); // Se actualiza la información en la interfaz
+                    actualizarInfoFields(); // Se actualiza la información en la interfaz
                     if (HabitacionesPasadas < (CantidadDeHabitaciones)) {
                         if (zombies > 0) {
                             System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------");
@@ -152,16 +178,22 @@ public class Juego extends JDialog {
                 while (zombies > 0) {
                     Zombie zombie = new Zombie(HabitacionesPasadas);
                     while (zombie.getVida() > 0 && superviviente.getVida() > 0) {
-                        superviviente.recibirAtaque(zombie.getAtaque());
+                        // Turno del jugador
+                        zombie.recibirAtaque(superviviente.getAtaque() + superviviente.getArma()); // El zombie recibe el ataque del jugador
+                        if (zombie.getVida() <= 0) {
+                            System.out.println("Has eliminado al zombie\n");
+                            zombies--; // Reducir el número de zombies si el zombie es derrotado
+                            break; // Salir del bucle si el zombie es derrotado
+                        }
+                        
+                        // Turno del zombie
+                        superviviente.recibirAtaque(zombie.getAtaque()); // El jugador recibe el ataque del zombie
                         if (superviviente.getVida() <= 0) {
                             JOptionPane.showMessageDialog(null, "¡Has muerto!");
                             reiniciarJuego();
                             return;
                         }
-                        zombie.recibirAtaque(superviviente.getAtaque() + superviviente.getArma());
                     }
-                    System.out.println("Has eliminado al zombie\n");
-                    zombies--;
                 }
                 // Después de derrotar a todos los zombies, habilitar los botones nuevamente
                 buscarButton.setEnabled(true);
@@ -169,8 +201,9 @@ public class Juego extends JDialog {
                 curarButton.setEnabled(true);
                 break;
         }
-        actualizarInfoLabel(); // Actualizar la información en la interfaz
+        actualizarInfoFields(); // Actualizar la información en la interfaz
     }
+
 
     public void FuncionAccion(int Accion) {
         switch (Accion) {
@@ -192,7 +225,7 @@ public class Juego extends JDialog {
         this.HabitacionesPasadas = 0; // Reiniciar el contador de habitaciones
         this.zombies = 0; // Reiniciar el contador de zombies
         this.RealizadasBusquedas = 0;
-        actualizarInfoLabel(); // Actualizar la información en la interfaz
+        actualizarInfoFields(); // Actualizar la información en la interfaz
     }
 
     public void usarBotiquin() {
@@ -304,7 +337,7 @@ public class Juego extends JDialog {
     public void pasarHabitacion() {
         HabitacionesPasadas++; // Incrementar el número de habitación
         RealizadasBusquedas = 0; // Reiniciar el contador de búsquedas
-        actualizarInfoLabel(); // Actualizar la información en la interfaz
+        actualizarInfoFields(); // Actualizar la información en la interfaz
         if (HabitacionesPasadas == CantidadDeHabitaciones) {
             JOptionPane.showMessageDialog(null, "¡Felicitaciones! Has escapado.");
             dispose();
@@ -318,15 +351,21 @@ public class Juego extends JDialog {
             fightButton.setEnabled(true); // Habilitar el botón de combatir
             JOptionPane.showMessageDialog(null, "Has avanzado a la siguiente habitación.");
         }
-        actualizarInfoLabel(); // Actualizar la información en la interfaz
+        actualizarInfoFields(); // Actualizar la información en la interfaz
     }
 
 
-    public void actualizarInfoLabel() {
-        // Actualizar el texto del JLabel con la información actualizada
-        String infoText = "Habitaciones jugadas: " + HabitacionesPasadas + "/" + CantidadDeHabitaciones
-                + " | Busquedas realizadas: " + RealizadasBusquedas + " | Zombies: " + zombies
-                + "| Vida del jugador: " + barrita(superviviente.getVida());
-        infoTextArea.setText(infoText);
+    public void actualizarInfoFields() {
+        // Actualizar los JTextField con la información actualizada
+        vidaTextField.setText("Vida: " + superviviente.getVida());
+        habitacionesTextField.setText("Habitaciones: " + HabitacionesPasadas + "/" + CantidadDeHabitaciones);
+        busquedasTextField.setText("Busquedas: " + RealizadasBusquedas);
+        zombiesTextField.setText("Zombies: " + zombies);
+        
+        // Agregar información sobre botiquín, arma y protección
+        String infoExtra = " | Arma: " + superviviente.getArma() 
+                        + " | Protección: " + superviviente.getProteccion() 
+                        + " | Botiquín: " + (superviviente.getBotiquines() ? "Sí" : "No");
+        textFieldArmaPB.setText(textFieldArmaPB.getText() + infoExtra);
     }
 }

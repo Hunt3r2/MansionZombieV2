@@ -67,7 +67,7 @@ public class Juego extends JDialog {
         fightButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                luchar(zombies);
+                luchar();
             }
         });
         panel.add(fightButton);
@@ -129,79 +129,40 @@ public class Juego extends JDialog {
         // Lógica para ver histórico de partidas
     }
 
-    public void ejecutarMenu() {
-        Scanner scanner = new Scanner(System.in);
-        while (HabitacionesPasadas < CantidadDeHabitaciones) {
-            try {
-                if (!superviviente.Muerte()) {
-                    HabitacionesPasadas++; // Se incrementa el contador al entrar a una habitación
-                    actualizarInfoFields(); // Se actualiza la información en la interfaz
-                    if (HabitacionesPasadas < (CantidadDeHabitaciones)) {
-                        if (zombies > 0) {
-                            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-                            System.out.println("Estadisticas del jugador (" + superviviente.getVida() + ") ["
-                                    + barrita(superviviente.getVida()) + "] hp, daño 4, cantidad de armas "
-                                    + superviviente.getArma() + " y las protecciones " + superviviente.getProteccion()
-                                    + "botiquin [0 = false] [1= true] = " + superviviente.getBotiquines()
-                                    + " .Estas en la habitación " + HabitacionesPasadas);
-                            System.out.println("1. Luchar contra " + zombies + " zombies");
-                            int Accion = scanner.nextInt();
-                            luchar(Accion);
-                        } else if (zombies <= 0) {
-                            opciones();
-                            int Accion = scanner.nextInt();
-                            FuncionAccion(Accion);
-                        }
-                    }
-                } else {
-                    System.out.println("Has muerto usuario");
-                    System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-                    System.out.println("¿Quieres reiniciar el juego[1]?");
-                    int Accion = scanner.nextInt();
-                    if (Accion == 1) {
-                        reiniciarJuego();
-                    } else {
-                        System.out.println("Fin del juego");
-                        break;
-                    }
-                }
-            } catch (Exception ex) {
-                System.out.println("Solo se aceptan números: ");
-                scanner.next();
+
+    public void luchar() {
+        // Generar atributos aleatorios para el zombie
+    	int vidaZombie = (int) (Math.random() * 2) + 2 + (HabitacionesPasadas - 1);
+    	int ataqueZombie = (int) (Math.random() * 3) + 3 + (HabitacionesPasadas - 1);
+
+        // Turno del superviviente
+        int ataqueSuperviviente = superviviente.getAtaque() + superviviente.getArma();
+        vidaZombie -= ataqueSuperviviente;
+
+        // Verificar si el zombie ha sido derrotado
+        if (vidaZombie <= 0) {
+            JOptionPane.showMessageDialog(null, "¡Has eliminado al zombie!");
+            zombies--; // Reducir el número de zombies en la habitación
+        } else {
+            // Turno del zombie solo si el superviviente sigue vivo
+            int ataqueZombieFinal = (int) (Math.random() * ataqueZombie) + 1;
+            superviviente.recibirAtaque(ataqueZombieFinal);
+            if (superviviente.getVida() <= 0) {
+                JOptionPane.showMessageDialog(null, "¡Has sido derrotado por el zombie!");
+                reiniciarJuego();
+                return; // Salir del método si el superviviente muere
+            } else {
+                // Mostrar el daño hecho por el zombie
+                JOptionPane.showMessageDialog(null, "El zombie te ha quitado " + ataqueZombieFinal + " puntos de vida.");
             }
         }
-    }
+        buscarButton.setEnabled(true);
+        avanzarButton.setEnabled(true);
+        curarButton.setEnabled(true);
+        fightButton.setEnabled(false); // Habilitar el botón de combatir
 
-    public void luchar(int Accion) {
-        switch (Accion) {
-            case 1:
-                while (zombies > 0) {
-                    Zombie zombie = new Zombie(HabitacionesPasadas);
-                    while (zombie.getVida() > 0 && superviviente.getVida() > 0) {
-                        // Turno del jugador
-                        zombie.recibirAtaque(superviviente.getAtaque() + superviviente.getArma()); // El zombie recibe el ataque del jugador
-                        if (zombie.getVida() <= 0) {
-                            System.out.println("Has eliminado al zombie\n");
-                            zombies--; // Reducir el número de zombies si el zombie es derrotado
-                            break; // Salir del bucle si el zombie es derrotado
-                        }
-                        
-                        // Turno del zombie
-                        superviviente.recibirAtaque(zombie.getAtaque()); // El jugador recibe el ataque del zombie
-                        if (superviviente.getVida() <= 0) {
-                            JOptionPane.showMessageDialog(null, "¡Has muerto!");
-                            reiniciarJuego();
-                            return;
-                        }
-                    }
-                }
-                // Después de derrotar a todos los zombies, habilitar los botones nuevamente
-                buscarButton.setEnabled(true);
-                avanzarButton.setEnabled(true);
-                curarButton.setEnabled(true);
-                break;
-        }
-        actualizarInfoFields(); // Actualizar la información en la interfaz
+        // Actualizar la información en la interfaz
+        actualizarInfoFields();
     }
 
 
@@ -299,6 +260,7 @@ public class Juego extends JDialog {
         } else {
             JOptionPane.showMessageDialog(null, "Has realizado 3 busquedas no se puede realizar mas busquedas");
         }
+        actualizarInfoFields();
     }
 
     public void hacerRuido() {
@@ -308,6 +270,8 @@ public class Juego extends JDialog {
         } else if (suerte2 == 2) {
             JOptionPane.showMessageDialog(null, "Mala suerte jugador, has atraído a un zombie");
             zombies++;
+            // Habilitar el botón de combatir
+            fightButton.setEnabled(true);
             // Deshabilitar los otros botones cuando entran zombies
             buscarButton.setEnabled(false);
             avanzarButton.setEnabled(false);
@@ -315,12 +279,16 @@ public class Juego extends JDialog {
         } else if (suerte2 == 3) {
             JOptionPane.showMessageDialog(null, "Mala suerte jugador, has atraído a ¡DOS ZOMBIES!");
             zombies += 2;
+            // Habilitar el botón de combatir
+            fightButton.setEnabled(true);
             // Deshabilitar los otros botones cuando entran zombies
             buscarButton.setEnabled(false);
             avanzarButton.setEnabled(false);
             curarButton.setEnabled(false);
         }
+        actualizarInfoFields();
     }
+
 
     public String barrita(int vida) {
         int vidaMaxima = 20;

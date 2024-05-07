@@ -1,3 +1,5 @@
+import javax.swing.JOptionPane;
+
 public class Superviviente {
     private int vida;
     private int ataque;
@@ -6,7 +8,7 @@ public class Superviviente {
     private int arma;
 
     public Superviviente() {
-        this.vida = 25;
+        this.vida = 20;
         this.ataque = 4;
         this.botiquines = false;
         this.proteccion = 0;
@@ -42,7 +44,7 @@ public class Superviviente {
             vida = Math.min(vida + 4, 20);
             botiquines = false;
         } else {
-            System.out.println("Botiquin mal gastado.");
+        	JOptionPane.showMessageDialog(null, "Botiquin mal gastado.");
             botiquines = false;
         }
     }

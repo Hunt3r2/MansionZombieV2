@@ -72,7 +72,8 @@ public class Juego extends JDialog {
         fightButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                luchar();
+            	Combate combate = new Combate();
+                combate.luchar();
             }
         });
         panel.add(fightButton);
@@ -379,9 +380,6 @@ public class Juego extends JDialog {
         }
     }
 
-
-
-    
     public void setHabitacionesPasadas(int habitacionesPasadas) {
         this.HabitacionesPasadas = habitacionesPasadas;
     }

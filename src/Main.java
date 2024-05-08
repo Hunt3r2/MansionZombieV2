@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import java.awt.Color;
@@ -106,13 +107,22 @@ public class Main extends JFrame{
                                         }
                                     }
                                 });
-                        cargarButton.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                            	Juego nuevoJuego = new Juego(cantidadDeHabitaciones, null);
-                            	nuevoJuego.cargarPartida();
-                            }
-                        });
+                                cargarButton.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        Juego juegoExistente = new Juego(cantidadDeHabitaciones, null); // Crear una instancia de Juego existente
+                                        Juego juegoCargado = Juego.cargarPartida(juegoExistente); // Cargar la partida en la instancia existente
+                                        if (juegoCargado != null) {
+                                            // Mostrar el juego cargado
+                                            juegoCargado.actualizarInfoFields(); // Actualizar la información en la interfaz
+                                            juegoCargado.setVisible(true);
+                                        } else {
+                                            // Si la carga falla, mostrar un mensaje de error
+                                            JOptionPane.showMessageDialog(null, "Error al cargar la partida.");
+                                        }
+                                    }
+                                });
+
                 historicoButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {

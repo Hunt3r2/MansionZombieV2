@@ -1,5 +1,10 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
 import javax.swing.JButton;
@@ -113,6 +118,15 @@ public class Juego extends JDialog {
         textFieldArmaPB.setEditable(false);
         textFieldArmaPB.setBounds(10, 89, 225, 20);
         panel.add(textFieldArmaPB);
+        
+        JButton btnGuardarPartida = new JButton("Guardar Partida");
+        btnGuardarPartida.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		guardarPartida();
+        	}
+        });
+        btnGuardarPartida.setBounds(483, 327, 161, 23);
+        panel.add(btnGuardarPartida);
         setVisible(true);
 
         actualizarInfoFields(); // Actualizar los campos de texto con la información inicial
@@ -120,15 +134,6 @@ public class Juego extends JDialog {
 
     public void iniciarJuego() {
     }
-
-    void cargarPartida() {
-        // Lógica para cargar partida guardada
-    }
-
-    public void verHistorico() {
-        // Lógica para ver histórico de partidas
-    }
-
 
     public void luchar() {
         // Generar atributos aleatorios para el zombie
@@ -336,4 +341,55 @@ public class Juego extends JDialog {
                         + " | Botiquín: " + (superviviente.getBotiquines() ? "Sí" : "No");
         textFieldArmaPB.setText(textFieldArmaPB.getText() + infoExtra);
     }
+    
+    public void guardarPartida() {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("partida.dat"))) {
+            // Guardar los datos necesarios
+            outputStream.writeInt(CantidadDeHabitaciones);
+            outputStream.writeInt(HabitacionesPasadas);
+            outputStream.writeInt(zombies);
+            outputStream.writeInt(RealizadasBusquedas);
+            outputStream.writeObject(superviviente); // Guardar el objeto superviviente
+            JOptionPane.showMessageDialog(null, "Partida guardada correctamente.");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error al guardar la partida: " + e.getMessage());
+        }
+    }
+
+    public static Juego cargarPartida(Juego juegoExistente) {
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("partida.dat"))) {
+            // Cargar los datos guardados
+            int cantidadDeHabitaciones = inputStream.readInt();
+            int habitacionesPasadas = inputStream.readInt();
+            int zombies = inputStream.readInt();
+            int realizadasBusquedas = inputStream.readInt();
+            Superviviente superviviente = (Superviviente) inputStream.readObject(); // Cargar el objeto superviviente
+
+            // Actualizar los datos del juego existente con los datos cargados
+            juegoExistente.setHabitacionesPasadas(habitacionesPasadas);
+            juegoExistente.zombies = zombies;
+            juegoExistente.RealizadasBusquedas = realizadasBusquedas;
+            juegoExistente.superviviente = superviviente;
+
+            JOptionPane.showMessageDialog(null, "Partida cargada correctamente.");
+            return juegoExistente; // Devolver la instancia actualizada del juego
+        } catch (IOException | ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "Error al cargar la partida: " + e.getMessage());
+            return null; // Devolver null si hay un error
+        }
+    }
+
+
+
+    
+    public void setHabitacionesPasadas(int habitacionesPasadas) {
+        this.HabitacionesPasadas = habitacionesPasadas;
+    }
+
+
+
+	public void verHistorico() {
+		// TODO Auto-generated method stub
+		
+	}
 }

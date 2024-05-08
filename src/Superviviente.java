@@ -1,6 +1,8 @@
+import java.io.Serializable;
+
 import javax.swing.JOptionPane;
 
-public class Superviviente {
+public class Superviviente implements Serializable {
     private int vida;
     private int ataque;
     private boolean botiquines;

@@ -91,7 +91,7 @@ public class Main extends JFrame{
                                 jugarButton.addActionListener(new ActionListener() {
                                     @Override
                                     public void actionPerformed(ActionEvent e) {
-                                        Juego nuevoJuego = new Juego(CantidadDeHabitaciones, null);
+                                        Juego nuevoJuego = new Juego(null, CantidadDeHabitaciones);
                                         nuevoJuego.iniciarJuego();
                                     }
                                 });
@@ -110,7 +110,7 @@ public class Main extends JFrame{
                                 cargarButton.addActionListener(new ActionListener() {
                                     @Override
                                     public void actionPerformed(ActionEvent e) {
-                                        Juego juegoExistente = new Juego(cantidadDeHabitaciones, null); // Crear una instancia de Juego existente
+                                        Juego juegoExistente = new Juego(null, cantidadDeHabitaciones); // Crear una instancia de Juego existente
                                         Juego juegoCargado = Juego.cargarPartida(juegoExistente); // Cargar la partida en la instancia existente
                                         if (juegoCargado != null) {
                                             // Mostrar el juego cargado
@@ -126,7 +126,7 @@ public class Main extends JFrame{
                 historicoButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                    	Juego nuevoJuego = new Juego(cantidadDeHabitaciones, null);
+                    	Juego nuevoJuego = new Juego(null, cantidadDeHabitaciones);
                     	nuevoJuego.verHistorico();
                     }
                 });

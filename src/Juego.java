@@ -31,12 +31,15 @@ public class Juego extends JDialog {
     private JTextField zombiesTextField;
     private JTextField textFieldArmaPB;
 
-    public Juego(int cantidadDeHabitaciones, JFrame juego) {
+    public Juego(JFrame juego, int cantidadDeHabitaciones) {
+    	super(juego, false);
         this.CantidadDeHabitaciones = cantidadDeHabitaciones;
         this.HabitacionesPasadas = 0;
         this.zombies = 1;
         this.RealizadasBusquedas = 0;
         this.superviviente = new Superviviente();
+        Combate combate = new Combate(juego, this, superviviente.getVida(), superviviente.getArma(), zombies, 0);
+
 
         setTitle("Juego de Supervivencia");
         setSize(670, 400);
@@ -67,13 +70,21 @@ public class Juego extends JDialog {
         zombiesTextField.setBounds(220, 58, 200, 20);
         panel.add(zombiesTextField);
 
+        Juego esteJuego = this; // Guardar una referencia al objeto Juego
+        
         fightButton = new JButton("Combatir contra un zombie");
         fightButton.setBounds(20, 209, 207, 23);
+        fightButton.setEnabled(true);
         fightButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	Combate combate = new Combate();
-                combate.luchar();
+                // Aquí se crea una nueva instancia de Combate pasando los parámetros necesarios
+            	Combate combate = new Combate(juego, esteJuego, superviviente.getVida(), superviviente.getArma(), zombies, 0);
+            	combate.mostrar(superviviente.getVida(), superviviente.getArma(), zombies, 0);
+                buscarButton.setEnabled(true);
+                avanzarButton.setEnabled(true);
+                curarButton.setEnabled(true);
+                fightButton.setEnabled(false);
             }
         });
         panel.add(fightButton);
@@ -92,6 +103,7 @@ public class Juego extends JDialog {
             }
         });
         panel.add(buscarButton);
+
 
         avanzarButton = new JButton("Avanzar a la siguiente habitación");
         avanzarButton.setBounds(20, 243, 207, 23);
@@ -136,40 +148,6 @@ public class Juego extends JDialog {
     public void iniciarJuego() {
     }
 
-    public void luchar() {
-        // Generar atributos aleatorios para el zombie
-    	int vidaZombie = (int) (Math.random() * 2) + 2 + (HabitacionesPasadas - 1);
-    	int ataqueZombie = (int) (Math.random() * 3) + 3 + (HabitacionesPasadas - 1);
-
-        // Turno del superviviente
-        int ataqueSuperviviente = superviviente.getAtaque() + superviviente.getArma();
-        vidaZombie -= ataqueSuperviviente;
-
-        // Verificar si el zombie ha sido derrotado
-        if (vidaZombie <= 0) {
-            JOptionPane.showMessageDialog(null, "¡Has eliminado al zombie!");
-            zombies--; // Reducir el número de zombies en la habitación
-        } else {
-            // Turno del zombie solo si el superviviente sigue vivo
-            int ataqueZombieFinal = (int) (Math.random() * ataqueZombie) + 1;
-            superviviente.recibirAtaque(ataqueZombieFinal);
-            if (superviviente.getVida() <= 0) {
-                JOptionPane.showMessageDialog(null, "¡Has sido derrotado por el zombie!");
-                reiniciarJuego();
-                return; // Salir del método si el superviviente muere
-            } else {
-                // Mostrar el daño hecho por el zombie
-                JOptionPane.showMessageDialog(null, "El zombie te ha quitado " + ataqueZombieFinal + " puntos de vida.");
-            }
-        }
-        buscarButton.setEnabled(true);
-        avanzarButton.setEnabled(true);
-        curarButton.setEnabled(true);
-        fightButton.setEnabled(false); // Habilitar el botón de combatir
-
-        // Actualizar la información en la interfaz
-        actualizarInfoFields();
-    }
 
 
     public void FuncionAccion(int Accion) {
@@ -331,7 +309,7 @@ public class Juego extends JDialog {
 
     public void actualizarInfoFields() {
         // Actualizar los JTextField con la información actualizada
-        vidaTextField.setText("Vida: " + superviviente.getVida());
+    	vidaTextField.setText("Vida: " + superviviente.getVida());
         habitacionesTextField.setText("Habitaciones: " + HabitacionesPasadas + "/" + CantidadDeHabitaciones);
         busquedasTextField.setText("Busquedas: " + RealizadasBusquedas);
         zombiesTextField.setText("Zombies: " + zombies);
@@ -341,6 +319,11 @@ public class Juego extends JDialog {
                         + " | Protección: " + superviviente.getProteccion() 
                         + " | Botiquín: " + (superviviente.getBotiquines() ? "Sí" : "No");
         textFieldArmaPB.setText(textFieldArmaPB.getText() + infoExtra);
+    }
+    
+    public void actualizarVidaSuperviviente(int nuevaVida) {
+        superviviente.setVida(nuevaVida); // Actualizar la vida del superviviente
+        actualizarInfoFields(); // Actualizar los campos de texto en la interfaz
     }
     
     public void guardarPartida() {

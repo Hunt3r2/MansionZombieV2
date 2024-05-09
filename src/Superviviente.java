@@ -73,4 +73,10 @@ public class Superviviente implements Serializable {
         proteccion = 0;
         arma = 0;
     }
+
+	public void setVida(int vida) {
+		this.vida = vida;
+	}
+    
+    
 }

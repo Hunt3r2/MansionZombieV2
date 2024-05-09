@@ -1,11 +1,6 @@
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,20 +9,23 @@ public class Combate extends JDialog {
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
     private JTextField textField;
-    private JTextField textField_1;
     private JTextField textField_2;
-    private JTextField textField_3;
     private JTextField textField_4;
-
+    private JTextField textField_3;
+    private JTextArea textArea;
+    private Juego juego; // Referencia al juego
     private int HabitacionesPasadas;
     private int zombies;
+    private int vidaZombie;
+    private int vidaSuperviviente;
+    private int armas;
 
     /**
      * Launch the application.
      */
-    public static void main(String[] args) {
+    public void mostrar(int vidaSuperviviente, int armas, int zombies, int vidaZombie) {
         try {
-            Combate dialog = new Combate();
+            Combate dialog = new Combate(null, this.juego, vidaSuperviviente, armas, zombies, vidaZombie);
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
         } catch (Exception e) {
@@ -35,44 +33,49 @@ public class Combate extends JDialog {
         }
     }
 
+
     /**
      * Create the dialog.
      */
-    public Combate() {
+    public Combate(JFrame combate, Juego juego, int armas, int zombies, int vidaZombie, int vidaSuperviviente) {
+        super(combate, true);
+        this.vidaSuperviviente = vidaSuperviviente;
+        this.armas = armas;
+        this.zombies = zombies;
+        this.vidaZombie = vidaZombie;
+        this.juego = juego; // Asigna la referencia del juego recibida al campo de la clase
+
         setBounds(100, 100, 450, 300);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(null);
+        setLocationRelativeTo(null);
 
         textField = new JTextField();
-        textField.setText("Vida: 20");
+        textField.setText("Vida: " + vidaSuperviviente);
         textField.setEditable(false);
         textField.setBounds(10, 11, 200, 20);
         contentPanel.add(textField);
 
-        textField_1 = new JTextField();
-        textField_1.setText("Habitaciones: 0/0");
-        textField_1.setEditable(false);
-        textField_1.setBounds(220, 11, 200, 20);
-        contentPanel.add(textField_1);
-
         textField_2 = new JTextField();
-        textField_2.setText("Zombies: 1");
+        textField_2.setText("Zombies: " + zombies);
         textField_2.setEditable(false);
-        textField_2.setBounds(220, 39, 200, 20);
+        textField_2.setBounds(224, 11, 200, 20);
         contentPanel.add(textField_2);
 
         textField_3 = new JTextField();
-        textField_3.setText("Busquedas: 0");
+        textField_3.setText("Vida del Zombie: " + vidaZombie);
         textField_3.setEditable(false);
-        textField_3.setBounds(10, 39, 200, 20);
+        textField_3.setBounds(245, 42, 179, 20);
         contentPanel.add(textField_3);
 
+        actualizarInfoFields();
+
         textField_4 = new JTextField();
-        textField_4.setText(" | Arma: 0 | Protección: 0 | Botiquín: No");
+        textField_4.setText(" | Arma: " + armas + " | Protección: 0 | Botiquín: No");
         textField_4.setEditable(false);
-        textField_4.setBounds(10, 70, 225, 20);
+        textField_4.setBounds(10, 42, 225, 20);
         contentPanel.add(textField_4);
 
         JButton fightButton = new JButton("Combatir contra un zombie");
@@ -83,36 +86,73 @@ public class Combate extends JDialog {
             }
         });
         contentPanel.add(fightButton);
+
+        textArea = new JTextArea();
+        textArea.setBounds(10, 94, 414, 76);
+        contentPanel.add(textArea);
     }
 
     public void luchar() {
         // Generar atributos aleatorios para el zombie
-        int vidaZombie = (int) (Math.random() * 2) + 2 + (HabitacionesPasadas - 1);
         int ataqueZombie = (int) (Math.random() * 3) + 3 + (HabitacionesPasadas - 1);
-
+        
         // Turno del superviviente
-        int ataqueSuperviviente = 4; // Obtener el ataque del superviviente de alguna manera
-        vidaZombie -= ataqueSuperviviente;
+        // Ataque del superviviente
+        int ataqueSuperviviente = (int) (Math.random() * 4) + 1; // Generar un número aleatorio entre 1 y 4
+
+        // Calcular el daño base del superviviente
+        int danioSuperviviente = ataqueSuperviviente;
+
+        // Verificar si el superviviente tiene armas
+        if (armas > 0) {
+            // Limitar el número de armas a un máximo de 3 para evitar valores excesivos
+            int armasUtilizadas = Math.min(armas, 3);
+            // Sumar el bono de daño por las armas al daño base
+            danioSuperviviente += armasUtilizadas;
+        }
+
+        vidaZombie -= danioSuperviviente;
+
+        // Mostrar información en el JTextArea
+        textArea.append("Atacaste al zombie y le hiciste " + danioSuperviviente + " de daño.\n");
 
         // Verificar si el zombie ha sido derrotado
         if (vidaZombie <= 0) {
             JOptionPane.showMessageDialog(null, "¡Has eliminado al zombie!");
             zombies--; // Reducir el número de zombies en la habitación
-        } else {
-            // Turno del zombie solo si el superviviente sigue vivo
-            int ataqueZombieFinal = (int) (Math.random() * ataqueZombie) + 1;
-            // Calcular el daño del zombie al superviviente
-            int danio = ataqueZombieFinal; // Cambiar esto por la lógica adecuada
-            // Mostrar el daño hecho por el zombie
-            JOptionPane.showMessageDialog(null, "El zombie te ha quitado " + danio + " puntos de vida.");
+            textField_3.setText("Vida del Zombie: 0");
+            dispose();
+            return; // Salir del método para evitar procesamiento adicional
         }
 
+        // Turno del zombie solo si el superviviente sigue vivo
+        // Calcular el daño del zombie al superviviente
+        int danioZombie = (int) (Math.random() * ataqueZombie) + 1;
+        // Mostrar el daño hecho por el zombie
+        textArea.append("El zombie te ha quitado " + danioZombie + " puntos de vida.\n");
+
+        // Restar el daño del zombie a la vida del superviviente
+        vidaSuperviviente -= danioZombie;
+        // Verificar si la vida del superviviente llega a 0 o menos
+        if (vidaSuperviviente <= 0) {
+            // Mostrar un mensaje de que el superviviente ha sido derrotado
+            JOptionPane.showMessageDialog(null, "¡El zombie te ha derrotado!");
+            // Cerrar el diálogo de combate
+            dispose();
+            return; // Salir del método para evitar procesamiento adicional
+        }
+
+        // Actualizar la vida del superviviente en el juego
+        juego.actualizarVidaSuperviviente(vidaSuperviviente);
         // Actualizar la información en la interfaz
         actualizarInfoFields();
     }
 
-    // Método para actualizar los campos de texto con la información actualizada
+
+
     private void actualizarInfoFields() {
-        // Implementa la lógica para actualizar los campos de texto con la información actualizada
+        textField.setText("Vida: " + vidaSuperviviente);
+        textField_2.setText("Zombies: " + zombies);
+        textField_3.setText("Vida del zombie: " + vidaZombie);
     }
 }

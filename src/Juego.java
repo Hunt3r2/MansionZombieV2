@@ -38,7 +38,7 @@ public class Juego extends JDialog {
         this.zombies = 1;
         this.RealizadasBusquedas = 0;
         this.superviviente = new Superviviente();
-        Combate combate = new Combate(juego, this, superviviente.getVida(), superviviente.getArma(), zombies, 0);
+        Combate combate = new Combate(juego, this, superviviente, superviviente.getVida(), superviviente.getArma(), zombies, 0);
 
 
         setTitle("Juego de Supervivencia");
@@ -79,7 +79,7 @@ public class Juego extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Aquí se crea una nueva instancia de Combate pasando los parámetros necesarios
-            	Combate combate = new Combate(juego, esteJuego, superviviente.getVida(), superviviente.getArma(), zombies, 0);
+            	Combate combate = new Combate(juego, esteJuego, superviviente, superviviente.getVida(), superviviente.getArma(), zombies, 0);
             	combate.mostrar(superviviente.getVida(), superviviente.getArma(), zombies, 0);
                 buscarButton.setEnabled(true);
                 avanzarButton.setEnabled(true);
@@ -339,6 +339,11 @@ public class Juego extends JDialog {
             JOptionPane.showMessageDialog(null, "Error al guardar la partida: " + e.getMessage());
         }
     }
+    
+    public Superviviente getSuperviviente() {
+        return superviviente;
+    }
+
 
     public static Juego cargarPartida(Juego juegoExistente) {
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("partida.dat"))) {

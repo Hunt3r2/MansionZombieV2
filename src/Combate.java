@@ -19,13 +19,16 @@ public class Combate extends JDialog {
     private int vidaZombie;
     private int vidaSuperviviente;
     private int armas;
+    private Superviviente superviviente;
 
     /**
      * Launch the application.
      */
     public void mostrar(int vidaSuperviviente, int armas, int zombies, int vidaZombie) {
         try {
-            Combate dialog = new Combate(null, this.juego, vidaSuperviviente, armas, zombies, vidaZombie);
+            Superviviente superviviente = new Superviviente(); // Crea una instancia de Superviviente
+        	this.vidaSuperviviente = superviviente.getVida();;
+            Combate dialog = new Combate(null, this.juego, superviviente, vidaSuperviviente, armas, zombies, vidaZombie);
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
         } catch (Exception e) {
@@ -37,13 +40,16 @@ public class Combate extends JDialog {
     /**
      * Create the dialog.
      */
-    public Combate(JFrame combate, Juego juego, int armas, int zombies, int vidaZombie, int vidaSuperviviente) {
+    public Combate(JFrame combate, Juego juego, Superviviente superviviente, int armas, int zombies, int vidaZombie, int vidaSuperviviente) {
         super(combate, true);
-        this.vidaSuperviviente = vidaSuperviviente;
+        this.vidaSuperviviente = superviviente.getVida(); // Obtiene la vida del superviviente
         this.armas = armas;
         this.zombies = zombies;
         this.vidaZombie = vidaZombie;
         this.juego = juego; // Asigna la referencia del juego recibida al campo de la clase
+        this.vidaZombie = new Zombie(HabitacionesPasadas).getVida();
+        this.superviviente = superviviente;
+
 
         setBounds(100, 100, 450, 300);
         getContentPane().setLayout(new BorderLayout());
@@ -93,12 +99,13 @@ public class Combate extends JDialog {
     }
 
     public void luchar() {
+    	
         // Generar atributos aleatorios para el zombie
         int ataqueZombie = (int) (Math.random() * 3) + 3 + (HabitacionesPasadas - 1);
         
         // Turno del superviviente
         // Ataque del superviviente
-        int ataqueSuperviviente = (int) (Math.random() * 4) + 1; // Generar un número aleatorio entre 1 y 4
+        int ataqueSuperviviente = (int) (Math.random() * 2); // Generar un número aleatorio entre 1 y 4
 
         // Calcular el daño base del superviviente
         int danioSuperviviente = ataqueSuperviviente;
@@ -110,6 +117,7 @@ public class Combate extends JDialog {
             // Sumar el bono de daño por las armas al daño base
             danioSuperviviente += armasUtilizadas;
         }
+
 
         vidaZombie -= danioSuperviviente;
 
@@ -131,6 +139,10 @@ public class Combate extends JDialog {
         // Mostrar el daño hecho por el zombie
         textArea.append("El zombie te ha quitado " + danioZombie + " puntos de vida.\n");
 
+        // Depuración
+        System.out.println("Vida superviviente antes del ataque del zombie: " + vidaSuperviviente);
+        System.out.println("Daño del zombie: " + danioZombie);
+
         // Restar el daño del zombie a la vida del superviviente
         vidaSuperviviente -= danioZombie;
         // Verificar si la vida del superviviente llega a 0 o menos
@@ -142,11 +154,18 @@ public class Combate extends JDialog {
             return; // Salir del método para evitar procesamiento adicional
         }
 
+        // Depuración
+        System.out.println("Vida superviviente después del ataque del zombie: " + vidaSuperviviente);
+
         // Actualizar la vida del superviviente en el juego
         juego.actualizarVidaSuperviviente(vidaSuperviviente);
         // Actualizar la información en la interfaz
+        
+        superviviente.setVida(vidaSuperviviente);
         actualizarInfoFields();
     }
+
+
 
 
 
@@ -154,5 +173,6 @@ public class Combate extends JDialog {
         textField.setText("Vida: " + vidaSuperviviente);
         textField_2.setText("Zombies: " + zombies);
         textField_3.setText("Vida del zombie: " + vidaZombie);
+        
     }
 }

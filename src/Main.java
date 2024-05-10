@@ -1,6 +1,7 @@
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Scanner;
 
 import javax.swing.JButton;
@@ -68,7 +69,7 @@ public class Main extends JFrame{
                                 comboBox.setFocusable(false);
                                 comboBox.setBackground(new Color(102, 153, 204));
                                 comboBox.setBorder(new LineBorder(new Color(0, 51, 153), 2, true));
-                                comboBox.setModel(new DefaultComboBoxModel(new String[] {"FACIL", "DIFICIL"}));
+                                comboBox.setModel(new DefaultComboBoxModel(new String[] {"FACIL", "MEDIO", "DIFICIL"}));
                                 comboBox.setBounds(181, 130, 84, 22);
                                 getContentPane().add(comboBox);
                                 
@@ -99,29 +100,37 @@ public class Main extends JFrame{
                                     @Override
                                     public void actionPerformed(ActionEvent e) {
                                         JComboBox cb = (JComboBox) e.getSource();
-                                        String difficulty = (String) cb.getSelectedItem();
-                                        if (difficulty.equals("FACIL")) {
+                                        String dificultad = (String) cb.getSelectedItem();
+                                        if (dificultad.equals("FACIL")) {
                                             CantidadDeHabitaciones = 5;
-                                        } else if (difficulty.equals("DIFICIL")) {
+                                        } else if (dificultad.equals("DIFICIL")) {
                                             CantidadDeHabitaciones = 10;
+                                        } else if (dificultad.equals("MEDIO")) {
+                                            CantidadDeHabitaciones = 7;                                      	
                                         }
                                     }
                                 });
                                 cargarButton.addActionListener(new ActionListener() {
                                     @Override
                                     public void actionPerformed(ActionEvent e) {
-                                        Juego juegoExistente = new Juego(null, cantidadDeHabitaciones); // Crear una instancia de Juego existente
-                                        Juego juegoCargado = Juego.cargarPartida(juegoExistente); // Cargar la partida en la instancia existente
-                                        if (juegoCargado != null) {
-                                            // Mostrar el juego cargado
-                                            juegoCargado.actualizarInfoFields(); // Actualizar la información en la interfaz
-                                            juegoCargado.setVisible(true);
+                                        if (existeArchivoGuardado()) {
+                                            Juego juegoExistente = new Juego(null, cantidadDeHabitaciones); // Crear una instancia de Juego existente
+                                            Juego juegoCargado = Juego.cargarPartida(juegoExistente); // Cargar la partida en la instancia existente
+                                            if (juegoCargado != null) {
+                                                // Mostrar el juego cargado
+                                                juegoCargado.actualizarInfoFields(); // Actualizar la información en la interfaz
+                                                juegoCargado.setVisible(true);
+                                            } else {
+                                                // Si la carga falla, mostrar un mensaje de error
+                                                JOptionPane.showMessageDialog(null, "Error al cargar la partida.");
+                                            }
                                         } else {
-                                            // Si la carga falla, mostrar un mensaje de error
-                                            JOptionPane.showMessageDialog(null, "Error al cargar la partida.");
+                                            // Si no hay archivo de guardado, mostrar un mensaje de aviso
+                                            JOptionPane.showMessageDialog(null, "No se encontró un archivo de guardado.");
                                         }
                                     }
                                 });
+
 
                 historicoButton.addActionListener(new ActionListener() {
                     @Override
@@ -131,6 +140,11 @@ public class Main extends JFrame{
                     }
                 });
         setVisible(true);
+    }
+    
+    private boolean existeArchivoGuardado() {
+        File file = new File("partida.dat");
+        return file.exists();
     }
 
     public static void main(String[] args) {

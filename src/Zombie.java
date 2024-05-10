@@ -5,8 +5,8 @@ public class Zombie {
 
     public Zombie(int cantidadDeHabitaciones) {
         Random random = new Random();
-        this.vida = random.nextInt(2) + 2;
-        this.ataque = random.nextInt(2) + 2;
+        this.vida = random.nextInt(2) + 3;
+        this.ataque = random.nextInt(2) + 3;
     }
     public int getVida() {
         return vida;

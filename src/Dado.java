@@ -3,6 +3,8 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 public class Dado {
+	private Random random;
+	
     public static int Busqueda() {
         Random random = new Random();
         int dado = random.nextInt(100) + 1;
@@ -22,6 +24,10 @@ public class Dado {
         return -1;
     }
 
+    public Dado() {
+        this.random = new Random();
+    }
+
     public static int ProbablidadAparicionZombie() {
         Random random = new Random();
         int dado = random.nextInt(100) + 1;
@@ -33,5 +39,9 @@ public class Dado {
             return 3;
         }
         return -1;
+    }
+    
+    public int lanzarDado(int min, int max) {
+        return random.nextInt(max - min + 1) + min;
     }
 }

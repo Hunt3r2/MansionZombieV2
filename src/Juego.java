@@ -21,6 +21,7 @@ public class Juego extends JDialog {
     private int zombies;
     private int RealizadasBusquedas;
     private Superviviente superviviente;
+    private Zombie zombie;
     private JButton fightButton;
     private JButton buscarButton;
     private JButton avanzarButton;
@@ -30,16 +31,22 @@ public class Juego extends JDialog {
     private JTextField busquedasTextField;
     private JTextField zombiesTextField;
     private JTextField textFieldArmaPB;
+    private int armas;
 
-    public Juego(JFrame juego, int cantidadDeHabitaciones) {
+    public Juego(JFrame juego, int cantidadDeHabitaciones)  {
     	super(juego, false);
         this.CantidadDeHabitaciones = cantidadDeHabitaciones;
         this.HabitacionesPasadas = 0;
         this.zombies = 1;
         this.RealizadasBusquedas = 0;
+        this.armas = 0;
         this.superviviente = new Superviviente();
-        Combate combate = new Combate(juego, this, superviviente, superviviente.getVida(), superviviente.getArma(), zombies, 0);
+        this.zombie = new Zombie(zombies);
+        Combate combate = new Combate(juego, this, superviviente, superviviente.getVida(), superviviente.getArma(), zombies, 0, 0, zombie);
 
+        if(superviviente.getVida() <= 0) {
+            dispose();
+        }
 
         setTitle("Juego de Supervivencia");
         setSize(670, 400);
@@ -78,13 +85,17 @@ public class Juego extends JDialog {
         fightButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	if(superviviente.getVida() <= 0) {
+                    dispose();
+                }
                 // Aquí se crea una nueva instancia de Combate pasando los parámetros necesarios
-            	Combate combate = new Combate(juego, esteJuego, superviviente, superviviente.getVida(), superviviente.getArma(), zombies, 0);
-            	combate.mostrar(superviviente.getVida(), superviviente.getArma(), zombies, 0);
+                Combate combate = new Combate(juego, esteJuego, superviviente, superviviente.getVida(), superviviente.getArma(), zombies, 0, 0, zombie);
+                combate.mostrar(superviviente.getVida(), superviviente.getArma(), zombies, 0);
                 buscarButton.setEnabled(true);
                 avanzarButton.setEnabled(true);
                 curarButton.setEnabled(true);
                 fightButton.setEnabled(false);
+                
             }
         });
         panel.add(fightButton);
@@ -95,7 +106,7 @@ public class Juego extends JDialog {
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (RealizadasBusquedas < 3 && zombies == 0) {
+                if (RealizadasBusquedas < 3) {
                     Busquedashabitaciones();
                 } else {
                     JOptionPane.showMessageDialog(null, "No puedes buscar más en esta habitación.");
@@ -223,13 +234,12 @@ public class Juego extends JDialog {
                     JOptionPane.showMessageDialog(null, "Has encontrado un botiquin pero ya tienes uno ");
                 } else {
                     superviviente.aumentarBotiquin();
-                    int Cura = JOptionPane.showConfirmDialog(null, "Superviviente quiere usar el botiquín?");
-                    if (Cura == JOptionPane.YES_OPTION) {
+                    int cura = JOptionPane.showConfirmDialog(null, "Superviviente quiere usar el botiquín?");
+                    if (cura == JOptionPane.YES_OPTION) {
                         superviviente.usarBotiquin();
                     }
                 }
                 break;
-
             case 3:
                 superviviente.aumentarProteccion();
                 break;
@@ -318,7 +328,12 @@ public class Juego extends JDialog {
         String infoExtra = " | Arma: " + superviviente.getArma() 
                         + " | Protección: " + superviviente.getProteccion() 
                         + " | Botiquín: " + (superviviente.getBotiquines() ? "Sí" : "No");
-        textFieldArmaPB.setText(textFieldArmaPB.getText() + infoExtra);
+        textFieldArmaPB.setText(infoExtra);
+    }
+    
+    public void onSupervivienteMuerto() {
+        // Cerrar la ventana de juego cuando el superviviente muere en Combate
+        dispose();
     }
     
     public void actualizarVidaSuperviviente(int nuevaVida) {
@@ -371,8 +386,10 @@ public class Juego extends JDialog {
     public void setHabitacionesPasadas(int habitacionesPasadas) {
         this.HabitacionesPasadas = habitacionesPasadas;
     }
-
-
+    
+    public void actualizarZombies(int zombies) {
+        this.zombies = zombies;
+    }
 
 	public void verHistorico() {
 		// TODO Auto-generated method stub

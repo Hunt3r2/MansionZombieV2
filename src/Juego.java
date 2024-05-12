@@ -1,7 +1,9 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -31,7 +33,9 @@ public class Juego extends JDialog {
     private JTextField busquedasTextField;
     private JTextField zombiesTextField;
     private JTextField textFieldArmaPB;
-    private int armas;
+    private Historico historico;
+    String resultadoJuego;
+
 
     public Juego(JFrame juego, int cantidadDeHabitaciones)  {
     	super(juego, false);
@@ -39,11 +43,10 @@ public class Juego extends JDialog {
         this.HabitacionesPasadas = 0;
         this.zombies = 1;
         this.RealizadasBusquedas = 0;
-        this.armas = 0;
         this.superviviente = new Superviviente();
         this.zombie = new Zombie(zombies);
         Combate combate = new Combate(juego, this, superviviente, superviviente.getVida(), superviviente.getArma(), zombies, 0, 0, zombie);
-
+        historico = new Historico();
         if(superviviente.getVida() <= 0) {
             dispose();
         }
@@ -302,6 +305,8 @@ public class Juego extends JDialog {
         actualizarInfoFields(); // Actualizar la información en la interfaz
         if (HabitacionesPasadas == CantidadDeHabitaciones) {
             JOptionPane.showMessageDialog(null, "¡Felicitaciones! Has escapado.");
+            setResultado(true);
+            guardarEnHistorico(obtenerDificultad(), HabitacionesPasadas, RealizadasBusquedas, zombies, superviviente.getVida(), superviviente.getArma(), superviviente.getBotiquines(), superviviente.getProteccion());
             dispose();
         } else {
             // Restablecer el número de zombies a 1
@@ -392,7 +397,45 @@ public class Juego extends JDialog {
     }
 
 	public void verHistorico() {
-		// TODO Auto-generated method stub
+		
+		String nombreArchivo = "historico.txt";
+		historico.cargarPartidasDesdeArchivo();
+        // Verificar si el archivo existe
+        File archivo = new File(nombreArchivo);
+        if (!archivo.exists()) {
+        	
+            JOptionPane.showMessageDialog(null, "El archivo de historial aún no existe.");
+            return;
+        }
+
+        // Si el archivo existe, puedes abrirlo para mostrar su contenido
+        Historico historicoDialog = new Historico();
+        historicoDialog.setVisible(true);
+		
+	}
+	
+	public void guardarEnHistorico(String dificultad, int habitacion, int busquedas, int zombies, int vida, int arma, boolean botiquin, int proteccion) {
+        historico.guardarEnHistorico(getResultado(), dificultad, habitacion, vida, botiquin, arma, proteccion);
+    }
+
+	private String getResultado() {
+		return resultadoJuego;
+	}
+	
+	void setResultado(boolean resultado) {	
+		if (false) {
+			resultadoJuego = "Perdiste";
+		} else {
+			resultadoJuego = "Ganaste";
+		}
+	}
+
+	String obtenerDificultad() {
+		String dificultad = null;
+	    if (CantidadDeHabitaciones == 5) {
+	    	dificultad = "Facil";
+	    }
+		return dificultad;
 		
 	}
 }

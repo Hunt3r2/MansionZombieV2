@@ -149,6 +149,7 @@ public class Combate extends JDialog {
         if (vidaSuperviviente <= 0) {
             // Mostrar un mensaje de que el superviviente ha sido derrotado
             JOptionPane.showMessageDialog(null, "¡El zombie te ha derrotado!");
+            juego.setResultado(false);
             // Cerrar el diálogo de combate
             dispose();
 

@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 
 public class Juego extends JDialog {
     private int CantidadDeHabitaciones;
@@ -39,19 +40,20 @@ public class Juego extends JDialog {
 
     public Juego(JFrame juego, int cantidadDeHabitaciones)  {
     	super(juego, false);
+    	setResizable(false);
         this.CantidadDeHabitaciones = cantidadDeHabitaciones;
         this.HabitacionesPasadas = 0;
         this.zombies = 1;
         this.RealizadasBusquedas = 0;
         this.superviviente = new Superviviente();
         this.zombie = new Zombie(zombies);
-        Combate combate = new Combate(juego, this, superviviente, superviviente.getVida(), superviviente.getArma(), zombies, 0, 0, zombie);
+        Combate combate = new Combate(null, this, superviviente, zombie);
         historico = new Historico();
         if(superviviente.getVida() <= 0) {
             dispose();
         }
 
-        setTitle("Juego de Supervivencia");
+        setTitle("Mansión Zombie");
         setSize(670, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -92,8 +94,8 @@ public class Juego extends JDialog {
                     dispose();
                 }
                 // Aquí se crea una nueva instancia de Combate pasando los parámetros necesarios
-                Combate combate = new Combate(juego, esteJuego, superviviente, superviviente.getVida(), superviviente.getArma(), zombies, 0, 0, zombie);
-                combate.mostrar(superviviente.getVida(), superviviente.getArma(), zombies, 0);
+            	Combate combate = new Combate(juego, esteJuego, superviviente, zombie);                
+            	combate.mostrar(superviviente.getVida(), superviviente.getArma(), zombies, 0);
                 buscarButton.setEnabled(true);
                 avanzarButton.setEnabled(true);
                 curarButton.setEnabled(true);
@@ -154,6 +156,11 @@ public class Juego extends JDialog {
         });
         btnGuardarPartida.setBounds(483, 327, 161, 23);
         panel.add(btnGuardarPartida);
+        
+        JLabel lblNewLabel = new JLabel("");
+        lblNewLabel.setIcon(new ImageIcon(Juego.class.getResource("/imagenes/fondo1.jpeg")));
+        lblNewLabel.setBounds(0, 0, 654, 361);
+        panel.add(lblNewLabel);
         setVisible(true);
 
         actualizarInfoFields(); // Actualizar los campos de texto con la información inicial
@@ -196,34 +203,6 @@ public class Juego extends JDialog {
         }
     }
 
-    public void opciones() {
-        if (HabitacionesPasadas < (CantidadDeHabitaciones - 1)) {
-            if (superviviente.getBotiquines()) {
-                JOptionPane.showMessageDialog(null,
-                        "Estadisticas del jugador (" + superviviente.getVida() + ") ["
-                                + barrita(superviviente.getVida()) + "] hp, daño 4, cantidad de armas "
-                                + superviviente.getArma() + " y las protecciones " + superviviente.getProteccion()
-                                + "botiquin [0 = false] [1= true] = " + superviviente.getBotiquines()
-                                + " .Estas en la habitación " + HabitacionesPasadas
-                                + "\n1. Buscar en una habitación\n2. Avanzar a la siguiente habitación \n3. Te puedes curar");
-            } else {
-                JOptionPane.showMessageDialog(null,
-                        "Estadisticas del jugador (" + superviviente.getVida() + ") ["
-                                + barrita(superviviente.getVida()) + "] hp, daño 4, cantidad de armas "
-                                + superviviente.getArma() + " y las protecciones " + superviviente.getProteccion()
-                                + "botiquin [0 = false] [1= true] = " + superviviente.getBotiquines()
-                                + " .Estas en la habitación " + HabitacionesPasadas
-                                + "\n1. Buscar en una habitación\n2. Avanzar a la siguiente habitación");
-            }
-        } else if (HabitacionesPasadas < (CantidadDeHabitaciones)) {
-            JOptionPane.showMessageDialog(null,
-                    "Estadisticas del jugador (" + superviviente.getVida() + ") ["
-                            + barrita(superviviente.getVida()) + "] hp, daño 4, cantidad de armas "
-                            + superviviente.getArma() + " y las protecciones " + superviviente.getProteccion()
-                            + "botiquin [0 = false][1 = true] = " + superviviente.getBotiquines()
-                            + " .Estas en la habitación " + HabitacionesPasadas + "\n1. Buscar en una habitación\n2. Final del juego");
-        }
-    }
 
     public void Busquedashabitaciones() {
         if (RealizadasBusquedas <= 3) {
@@ -284,19 +263,6 @@ public class Juego extends JDialog {
             curarButton.setEnabled(false);
         }
         actualizarInfoFields();
-    }
-
-
-    public String barrita(int vida) {
-        int vidaMaxima = 20;
-        StringBuilder barra = new StringBuilder();
-        for (int i = 0; i < vida; i++) {
-            barra.append("*");
-        }
-        for (int i = vida; i < vidaMaxima; i++) {
-            barra.append("-");
-        }
-        return barra.toString();
     }
 
     public void pasarHabitacion() {
@@ -422,18 +388,26 @@ public class Juego extends JDialog {
 		return resultadoJuego;
 	}
 	
-	void setResultado(boolean resultado) {	
-		if (false) {
-			resultadoJuego = "Perdiste";
-		} else {
-			resultadoJuego = "Ganaste";
-		}
+	public void setResultado(boolean resultado) {
+	    if (resultado) {
+	        resultadoJuego = "Ganaste";
+	    } else {
+	        resultadoJuego = "Perdiste";
+	        dispose();
+	    }
+	    // Guardar la partida en el historial
+	    guardarEnHistorico(obtenerDificultad(), HabitacionesPasadas, RealizadasBusquedas, zombies, superviviente.getVida(), superviviente.getArma(), superviviente.getBotiquines(), superviviente.getProteccion());
 	}
+
 
 	String obtenerDificultad() {
 		String dificultad = null;
 	    if (CantidadDeHabitaciones == 5) {
 	    	dificultad = "Facil";
+	    } else if (CantidadDeHabitaciones == 7) {
+	    	dificultad = "Medio";
+	    } else {
+	    	dificultad = "Dificil";
 	    }
 		return dificultad;
 		

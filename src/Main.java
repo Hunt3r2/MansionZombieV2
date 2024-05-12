@@ -35,7 +35,7 @@ public class Main extends JFrame {
 		this.RealizadasBusquedas = 0;
 		this.superviviente = new Superviviente();
 
-		setTitle("Menú de Juego");
+		setTitle("Menú Mansión Zombie");
 		setSize(543, 380);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -77,7 +77,7 @@ public class Main extends JFrame {
 		panel.setBounds(79, 249, 377, 66);
 		getContentPane().add(panel);
 
-		JLabel lblNewLabel_1 = new JLabel("MANSION ZOMBIE");
+		JLabel lblNewLabel_1 = new JLabel("MANSIÓN ZOMBIE");
 		panel.add(lblNewLabel_1);
 		lblNewLabel_1.setFont(new Font("Yu Gothic UI", Font.BOLD, 37));
 		lblNewLabel_1.setForeground(new Color(128, 0, 0));

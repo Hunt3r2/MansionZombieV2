@@ -1,1 +1,11 @@
-Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 12|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 12|Botiquín: No|Armas: 0|Protecciones: 0|Resultado: Ganaste|Dificultad: null|Habitación: 7|Vidas: 16|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Medio|Habitación: 7|Vidas: 7|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 5|Botiquín: No|Armas: 0|Protecciones: 2|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 11|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Medio|Habitación: 7|Vidas: 13|Botiquín: No|Armas: 2|Protecciones: 1|
+Resultado: Perdiste|Dificultad: Dificil|Habitación: 6|Vidas: 1|Botiquín: Sí|Armas: 1|Protecciones: 1|
+Resultado: Perdiste|Dificultad: Dificil|Habitación: 7|Vidas: 1|Botiquín: Sí|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 8|Botiquín: No|Armas: 0|Protecciones: 1|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 8|Botiquín: No|Armas: 0|Protecciones: 1|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 16|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 16|Botiquín: No|Armas: 0|Protecciones: 0|

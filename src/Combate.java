@@ -53,7 +53,7 @@ public class Combate extends JDialog {
         this.zombie = zombie;
         this.vidaZombie = vidaZombie;
         this.juego = juego; // Asigna la referencia del juego recibida al campo de la clase
-        this.vidaZombie = new Zombie(HabitacionesPasadas).getVida();
+        this.vidaZombie = new Zombie().getVida();
         this.superviviente = superviviente;
         this.proteccion = superviviente.getProteccion();
 

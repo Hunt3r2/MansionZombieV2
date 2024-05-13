@@ -6,19 +6,23 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.awt.FlowLayout;
 
+/**
+ * Clase que representa el historial de partidas.
+ */
 public class Historico extends JDialog {
     private JTable table;
     private JComboBox filtroComboBox;
 
+    /**
+     * Constructor de la clase Historico.
+     */
     public Historico() {
         setTitle("Historial de Partidas");
         setSize(861, 500);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Crear el panel para el filtro
         JPanel filtroPanel = new JPanel();
         filtroPanel.setBounds(0, 0, 845, 30);
         filtroPanel.setLayout(null);
@@ -26,13 +30,11 @@ public class Historico extends JDialog {
         lblFiltrarPorResultado.setBounds(23, 8, 123, 14);
         filtroPanel.add(lblFiltrarPorResultado);
 
-        // Crear el ComboBox de filtro
         String[] opcionesFiltro = {"Todas", "Victorias", "Derrotas"};
         filtroComboBox = new JComboBox(opcionesFiltro);
         filtroComboBox.setBounds(156, 5, 114, 20);
         filtroPanel.add(filtroComboBox);
 
-        // Evento de acción para el ComboBox de filtro
         filtroComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -40,27 +42,26 @@ public class Historico extends JDialog {
             }
         });
 
-        // Crear el modelo de tabla
         String[] columnNames = {"Resultado", "Dificultad", "Habitación", "Vidas", "Botiquín", "Armas", "Protecciones"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-        // Crear la tabla y establecer el modelo
         table = new JTable(model);
 
-        // Agregar la tabla a un JScrollPane y agregarlo al contenido del diálogo
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(20, 42, 803, 396);
         getContentPane().setLayout(null);
         getContentPane().add(filtroPanel);
         getContentPane().add(scrollPane);
 
-        // Cargar las partidas desde el archivo
         cargarPartidasDesdeArchivo();
     }
 
+    /**
+     * Metodo para cargar las partidas desde el archivo.
+     */
     public void cargarPartidasDesdeArchivo() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0); // Limpiar la tabla antes de cargar nuevas partidas
+        model.setRowCount(0);
 
         String filtroSeleccionado = (String) filtroComboBox.getSelectedItem();
 
@@ -68,7 +69,7 @@ public class Historico extends JDialog {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                String resultado = parts[0].substring(11).trim(); // Extraer el resultado de la partida
+                String resultado = parts[0].substring(11).trim();
                 if (filtroSeleccionado.equals("Todas") ||
                         (filtroSeleccionado.equals("Victorias") && resultado.equals("Ganaste")) ||
                         (filtroSeleccionado.equals("Derrotas") && resultado.equals("Perdiste"))) {
@@ -80,6 +81,16 @@ public class Historico extends JDialog {
         }
     }
 
+    /**
+     * Metodo para guardar una partida en el historial.
+     * @param resultado Resultado de la partida.
+     * @param dificultad Dificultad de la partida.
+     * @param habitacion Habitacion en la que se encontraba el jugador.
+     * @param vidas Vidas del jugador.
+     * @param botiquin Si el jugador tenia botiquin.
+     * @param arma Numero de armas del jugador.
+     * @param proteccion Número de protecciones del jugador.
+     */
     public void guardarEnHistorico(String resultado, String dificultad, int habitacion, int vidas, boolean botiquin, int arma, int proteccion) {
         try (FileWriter writer = new FileWriter("historico.txt", true)) {
             writer.write("Resultado: " + resultado + "|");
@@ -94,6 +105,9 @@ public class Historico extends JDialog {
         }
     }
 
+    /**
+     * Metodo para visualizar el historial de partidas.
+     */
     public void verHistorico() {
         setVisible(true);
     }

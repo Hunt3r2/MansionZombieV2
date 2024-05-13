@@ -46,7 +46,7 @@ public class Juego extends JDialog {
         this.zombies = 1;
         this.RealizadasBusquedas = 0;
         this.superviviente = new Superviviente();
-        this.zombie = new Zombie(zombies);
+        this.zombie = new Zombie();
         Combate combate = new Combate(null, this, superviviente, zombie);
         historico = new Historico();
         if(superviviente.getVida() <= 0) {

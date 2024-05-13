@@ -64,7 +64,7 @@ public class Dado {
     }
 
     /**
-     * Metodo para lanzar un dado con un rango específico.
+     * Metodo para lanzar un dado con un rango especifico.
      * 
      * @param min El valor minimo del rango.
      * @param max El valor maximo del rango.

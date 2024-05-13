@@ -65,15 +65,15 @@ public class Historico extends JDialog {
 
         String filtroSeleccionado = (String) filtroComboBox.getSelectedItem();
 
-        try (BufferedReader br = new BufferedReader(new FileReader("historico.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split("\\|");
-                String resultado = parts[0].substring(11).trim();
+        try (BufferedReader lectorBuffered = new BufferedReader(new FileReader("historico.txt"))) {
+            String linea;
+            while ((linea = lectorBuffered.readLine()) != null) {
+                String[] info = linea.split("\\|");
+                String resultado = info[0].substring(11).trim();
                 if (filtroSeleccionado.equals("Todas") ||
                         (filtroSeleccionado.equals("Victorias") && resultado.equals("Ganaste")) ||
                         (filtroSeleccionado.equals("Derrotas") && resultado.equals("Perdiste"))) {
-                    model.addRow(parts);
+                    model.addRow(info);
                 }
             }
         } catch (IOException e) {
@@ -92,14 +92,14 @@ public class Historico extends JDialog {
      * @param proteccion Número de protecciones del jugador.
      */
     public void guardarEnHistorico(String resultado, String dificultad, int habitacion, int vidas, boolean botiquin, int arma, int proteccion) {
-        try (FileWriter writer = new FileWriter("historico.txt", true)) {
-            writer.write("Resultado: " + resultado + "|");
-            writer.write("Dificultad: " + dificultad + "|");
-            writer.write("Habitación: " + habitacion + "|");
-            writer.write("Vidas: " + vidas + "|");
-            writer.write("Botiquín: " + (botiquin ? "Sí" : "No") + "|");
-            writer.write("Armas: " + arma + "|");
-            writer.write("Protecciones: " + proteccion + "|\n");
+        try (FileWriter escritor = new FileWriter("historico.txt", true)) {
+            escritor.write("Resultado: " + resultado + "|");
+            escritor.write("Dificultad: " + dificultad + "|");
+            escritor.write("Habitación: " + habitacion + "|");
+            escritor.write("Vidas: " + vidas + "|");
+            escritor.write("Botiquín: " + (botiquin ? "Sí" : "No") + "|");
+            escritor.write("Armas: " + arma + "|");
+            escritor.write("Protecciones: " + proteccion + "|\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

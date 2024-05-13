@@ -18,6 +18,7 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.border.LineBorder;
+import javax.swing.JTextField;
 
 /**
  * Clase principal que representa el menú principal de la Mansion Zombie.
@@ -29,6 +30,8 @@ public class Main extends JFrame {
     private int RealizadasBusquedas;
     private Superviviente superviviente;
     private JButton fightButton;
+    JButton cargarButton;
+
 
     /**
      * Constructor de la clase Main.
@@ -47,6 +50,9 @@ public class Main extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
+        
+
+        
 
         JButton historicoButton = new JButton("Ver histórico");
         historicoButton.setFocusable(false);
@@ -55,7 +61,7 @@ public class Main extends JFrame {
         historicoButton.setBounds(24, 198, 147, 23);
         getContentPane().add(historicoButton);
 
-        JButton cargarButton = new JButton("Cargar partida");
+        cargarButton = new JButton("Cargar partida");
         cargarButton.setFocusable(false);
         cargarButton.setBackground(new Color(102, 153, 204));
         cargarButton.setBorder(new LineBorder(new Color(0, 51, 153), 2, true));
@@ -89,16 +95,14 @@ public class Main extends JFrame {
         lblNewLabel_1.setFont(new Font("Yu Gothic UI", Font.BOLD, 37));
         lblNewLabel_1.setForeground(new Color(128, 0, 0));
 
-        JLabel lblNewLabel = new JLabel("");
-        lblNewLabel
-                .setIcon(new ImageIcon(Main.class.getResource("/imagenes/25531648-6470-4ef6-b27f-03a68b972078.jpg")));
-        lblNewLabel.setBounds(0, 0, 533, 346);
-        getContentPane().add(lblNewLabel);
+        JLabel lblFondo = new JLabel("");
+        lblFondo.setIcon(new ImageIcon(Main.class.getResource("/imagenes/25531648-6470-4ef6-b27f-03a68b972078.jpg")));
+        lblFondo.setBounds(0, 0, 533, 346);
+        getContentPane().add(lblFondo);
         jugarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Juego nuevoJuego = new Juego(null, CantidadDeHabitaciones);
-                nuevoJuego.iniciarJuego();
+                    Juego nuevoJuego = new Juego(null, CantidadDeHabitaciones);
             }
         });
         comboBox.addActionListener(new ActionListener() {
@@ -118,11 +122,12 @@ public class Main extends JFrame {
         cargarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (existeArchivoGuardado()) {
+                File archivo = new File("partida.dat");
+                if (archivo.exists()) {
                     Juego juegoExistente = new Juego(null, cantidadDeHabitaciones);
                     Juego juegoCargado = Juego.cargarPartida(juegoExistente);
                     if (juegoCargado != null) {
-                        juegoCargado.actualizarInfoFields();
+                        juegoCargado.actualizarInfoMostrada();
                         juegoCargado.setVisible(true);
                     } else {
                         JOptionPane.showMessageDialog(null, "Error al cargar la partida.");
@@ -148,16 +153,7 @@ public class Main extends JFrame {
 
         setVisible(true);
     }
-
-    /**
-     * Comprueba si existe un archivo de partida guardado.
-     * @return true si existe un archivo de partida guardado, false si no existe.
-     */
-    private boolean existeArchivoGuardado() {
-        File file = new File("partida.dat");
-        return file.exists();
-    }
-
+   
     /**
      * Método principal.
      */

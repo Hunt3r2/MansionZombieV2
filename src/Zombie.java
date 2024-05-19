@@ -12,9 +12,7 @@ public class Zombie {
      */
     public Zombie() {
         Random random = new Random();
-        // Se establece la vida del zombie como un valor aleatorio entre 3 y 4.
         this.vida = random.nextInt(2) + 3;
-        // Se establece el ataque del zombie como un valor aleatorio entre 3 y 4.
         this.ataque = random.nextInt(2) + 3;
     }
 

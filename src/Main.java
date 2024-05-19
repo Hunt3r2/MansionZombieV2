@@ -1,24 +1,18 @@
-import java.awt.GridLayout;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Scanner;
-
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.JComboBox;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import java.awt.Color;
-import java.awt.Font;
 import javax.swing.border.LineBorder;
-import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 
 /**
  * Clase principal que representa el menú principal de la Mansion Zombie.
@@ -32,7 +26,6 @@ public class Main extends JFrame {
     private JButton fightButton;
     JButton cargarButton;
 
-
     /**
      * Constructor de la clase Main.
      * @param cantidadDeHabitaciones Numero de habitaciones por defecto.
@@ -45,14 +38,12 @@ public class Main extends JFrame {
         this.RealizadasBusquedas = 0;
         this.superviviente = new Superviviente();
 
+
         setTitle("Menú Mansión Zombie");
         setSize(543, 380);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
-        
-
-        
 
         JButton historicoButton = new JButton("Ver histórico");
         historicoButton.setFocusable(false);
@@ -99,12 +90,15 @@ public class Main extends JFrame {
         lblFondo.setIcon(new ImageIcon(Main.class.getResource("/imagenes/25531648-6470-4ef6-b27f-03a68b972078.jpg")));
         lblFondo.setBounds(0, 0, 533, 346);
         getContentPane().add(lblFondo);
+
         jugarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    Juego nuevoJuego = new Juego(null, CantidadDeHabitaciones);
+                Juego nuevoJuego = new Juego(null, CantidadDeHabitaciones);
+                nuevoJuego.setVisible(true);
             }
         });
+
         comboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -119,13 +113,15 @@ public class Main extends JFrame {
                 }
             }
         });
+
         cargarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 File archivo = new File("partida.dat");
                 if (archivo.exists()) {
-                    Juego juegoExistente = new Juego(null, cantidadDeHabitaciones);
-                    Juego juegoCargado = Juego.cargarPartida(juegoExistente);
+                    // Utiliza el JFrame existente de la ventana principal
+                    Juego juego = new Juego(Main.this, CantidadDeHabitaciones);
+                    Juego juegoCargado = Juego.cargarPartida(juego);
                     if (juegoCargado != null) {
                         juegoCargado.actualizarInfoMostrada();
                         juegoCargado.setVisible(true);
@@ -137,6 +133,8 @@ public class Main extends JFrame {
                 }
             }
         });
+
+
 
         historicoButton.addActionListener(new ActionListener() {
             @Override
@@ -153,7 +151,7 @@ public class Main extends JFrame {
 
         setVisible(true);
     }
-   
+
     /**
      * Método principal.
      */
@@ -161,7 +159,8 @@ public class Main extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new Main(5);
+            	Main main = new Main(5);
+                main.setVisible(true);
             }
         });
     }

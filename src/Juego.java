@@ -39,6 +39,7 @@ public class Juego extends JDialog {
     private JTextField textFieldArmaPB;
     private Historico historico;
     String resultadoJuego;
+    
 
     /**
      * Constructor de la clase Juego.
@@ -46,19 +47,21 @@ public class Juego extends JDialog {
      * @param cantidadDeHabitaciones La cantidad de habitaciones en el juego.
      */
     public Juego(JFrame juego, int cantidadDeHabitaciones)  {
-    	super(juego, false);
+    	super(juego, true);
     	setResizable(false);
         this.CantidadDeHabitaciones = cantidadDeHabitaciones;
         this.HabitacionesPasadas = 0;
         this.zombies = 1;
         this.RealizadasBusquedas = 0;
         this.superviviente = new Superviviente();
+    	
         this.zombie = new Zombie();
         Combate combate = new Combate(null, this, superviviente, zombie);
         historico = new Historico();
         if(superviviente.getVida() <= 0) {
             dispose();
         }
+        
 
         setTitle("Mansión Zombie");
         setSize(670, 400);
@@ -104,6 +107,7 @@ public class Juego extends JDialog {
         panel.add(zombiesTextField);
 
         Juego esteJuego = this; // Guardar una referencia al objeto Juego
+        
         
         btnPelea = new JButton("Combatir contra un zombie");
         btnPelea.setBackground(new Color(135, 206, 250));
@@ -178,7 +182,7 @@ public class Juego extends JDialog {
         textFieldArmaPB.setBounds(10, 89, 225, 20);
         panel.add(textFieldArmaPB);
         
-        
+        actualizarInfoMostrada();
         
         JButton btnGuardarPartida = new JButton("Guardar Partida");
         btnGuardarPartida.setBackground(new Color(135, 206, 250));
@@ -315,7 +319,6 @@ public class Juego extends JDialog {
         if (HabitacionesPasadas == CantidadDeHabitaciones) {
             JOptionPane.showMessageDialog(null, "¡Felicitaciones! Has escapado.");
             setResultado(true);
-            guardarEnHistorico(obtenerDificultad(), HabitacionesPasadas, RealizadasBusquedas, zombies, superviviente.getVida(), superviviente.getArma(), superviviente.getBotiquines(), superviviente.getProteccion());
             dispose();
         } else {
             zombies = 1; 
@@ -330,7 +333,7 @@ public class Juego extends JDialog {
 
 
     /**
-     * Actualiza la información mostrada en la interfaz gráfica del juego.
+     * Actualiza la información mostrada.
      */
     public void actualizarInfoMostrada() {
         vidaTextField.setText("Vida: " + superviviente.getVida());
@@ -345,7 +348,7 @@ public class Juego extends JDialog {
     }
     
     /**
-     * Actualiza la vida del superviviente en la interfaz gráfica.
+     * Actualiza la vida del superviviente.
      * @param nuevaVida La nueva vida del superviviente.
      */
     public void actualizarVidaSuperviviente(int nuevaVida) {
@@ -389,6 +392,7 @@ public class Juego extends JDialog {
             int habitacionesPasadas = inputStream.readInt();
             int zombies = inputStream.readInt();
             int realizadasBusquedas = inputStream.readInt();
+            
             Superviviente superviviente = (Superviviente) inputStream.readObject(); 
 
             juegoExistente.setHabitacionesPasadas(habitacionesPasadas);
@@ -400,9 +404,11 @@ public class Juego extends JDialog {
             return juegoExistente; 
         } catch (IOException | ClassNotFoundException e) {
             JOptionPane.showMessageDialog(null, "Error al cargar la partida: " + e.getMessage());
+            e.printStackTrace();
             return null; 
         }
     }
+
 
     /**
      * Establece la cantidad de habitaciones pasadas en el juego.
@@ -473,6 +479,7 @@ public class Juego extends JDialog {
 	    }
 	    guardarEnHistorico(obtenerDificultad(), HabitacionesPasadas, RealizadasBusquedas, zombies, superviviente.getVida(), superviviente.getArma(), superviviente.getBotiquines(), superviviente.getProteccion());
 	}
+
 
 
 	/**

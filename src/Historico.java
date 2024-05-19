@@ -42,8 +42,8 @@ public class Historico extends JDialog {
             }
         });
 
-        String[] columnNames = {"Resultado", "Dificultad", "Habitación", "Vidas", "Botiquín", "Armas", "Protecciones"};
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        String[] nombreColumnas = {"Resultado", "Dificultad", "Habitación", "Vidas", "Botiquín", "Armas", "Protecciones"};
+        DefaultTableModel model = new DefaultTableModel(nombreColumnas, 0);
 
         table = new JTable(model);
 
@@ -57,7 +57,7 @@ public class Historico extends JDialog {
     }
 
     /**
-     * Metodo para cargar las partidas desde el archivo.
+     * Metodo para cargar el historial desde el archivo.
      */
     public void cargarPartidasDesdeArchivo() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();

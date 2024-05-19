@@ -35,6 +35,7 @@ public class Combate extends JDialog {
     private JLabel lblGato;
     private JLabel lblNewLabel;
     private JPanel panelGameOver;
+    private int ronda = 1;
 
 
     /**
@@ -66,6 +67,7 @@ public class Combate extends JDialog {
      */
     public Combate(JFrame combate, Juego juego, Superviviente superviviente, Zombie zombie) {
         super(combate, true);
+        setResizable(false);
         setTitle("combate");
         this.vidaSuperviviente = superviviente.getVida();
         this.armas = armas;
@@ -183,12 +185,14 @@ public class Combate extends JDialog {
      */
     public void luchar() {
         Dado dado = new Dado();
+        textArea.append(">>> RONDA: " + ronda + "\n");
+        ronda++;
         int ataqueSuperviviente = dado.lanzarDado(1, 4);
-        int danioSuperviviente = ataqueSuperviviente;
-        danioSuperviviente += armas;
-        danioSuperviviente = Math.max(0, danioSuperviviente);
-        vidaZombie -= danioSuperviviente;
-        textArea.append("Atacaste al zombie y le hiciste " + danioSuperviviente + " de daño.\n");
+        int golpeSuperviviente = ataqueSuperviviente;
+        golpeSuperviviente += armas;
+        golpeSuperviviente = Math.max(0, golpeSuperviviente);
+        vidaZombie -= golpeSuperviviente;
+        textArea.append("Atacaste al zombie y le hiciste " + golpeSuperviviente + " de daño.\n");
         if (vidaZombie <= 0) {
             JOptionPane.showMessageDialog(null, "¡Has eliminado al zombie!");
             zombies--;
@@ -197,9 +201,9 @@ public class Combate extends JDialog {
             btnPelea.setEnabled(false);
             return;
         }
-        int danioZombie = dado.lanzarDado(1, 2) + 2 + (HabitacionesPasadas - 1) ;
-        int ataqueZombie = danioZombie - proteccion;
-        textArea.append("El zombie te ha quitado " + danioZombie + " puntos de vida.\n");
+        int golpeZombie = dado.lanzarDado(1, 2) + 2 + (HabitacionesPasadas - 1) ;
+        int ataqueZombie = golpeZombie - proteccion;
+        textArea.append("El zombie te ha quitado " + golpeZombie + " puntos de vida.\n");
         juego.actualizarZombies(0);
         vidaSuperviviente -= ataqueZombie;
         if (vidaSuperviviente <= 0) {
@@ -227,6 +231,4 @@ public class Combate extends JDialog {
         textFieldZombies.setText("Zombies: " + zombies);
         textFieldVidaZombie.setText("Vida del zombie: " + zombie.getVida());
     }
-
-
 }

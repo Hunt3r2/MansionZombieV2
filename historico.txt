@@ -34,3 +34,15 @@ Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 15|Botiquín: No|Arma
 Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 7|Botiquín: Sí|Armas: 0|Protecciones: 0|
 Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 7|Botiquín: Sí|Armas: 0|Protecciones: 0|
 Resultado: Perdiste|Dificultad: Dificil|Habitación: 8|Vidas: 3|Botiquín: Sí|Armas: 0|Protecciones: 0|
+Resultado: Perdiste|Dificultad: Facil|Habitación: 0|Vidas: 0|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Perdiste|Dificultad: Facil|Habitación: 0|Vidas: 0|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Perdiste|Dificultad: Facil|Habitación: 0|Vidas: 0|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 13|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 13|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Medio|Habitación: 7|Vidas: 2|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Medio|Habitación: 7|Vidas: 2|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 13|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 13|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 5|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Perdiste|Dificultad: Facil|Habitación: 0|Vidas: 0|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 15|Botiquín: No|Armas: 0|Protecciones: 0|

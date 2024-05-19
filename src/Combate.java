@@ -202,7 +202,7 @@ public class Combate extends JDialog {
             return;
         }
         int golpeZombie = dado.lanzarDado(1, 2) + 2 + (HabitacionesPasadas - 1) ;
-        int ataqueZombie = golpeZombie - proteccion;
+        int ataqueZombie = Math.max(golpeZombie - proteccion, 0);
         textArea.append("El zombie te ha quitado " + golpeZombie + " puntos de vida.\n");
         juego.actualizarZombies(0);
         vidaSuperviviente -= ataqueZombie;

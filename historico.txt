@@ -46,3 +46,7 @@ Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 13|Botiquín: No|Arma
 Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 5|Botiquín: No|Armas: 0|Protecciones: 0|
 Resultado: Perdiste|Dificultad: Facil|Habitación: 0|Vidas: 0|Botiquín: No|Armas: 0|Protecciones: 0|
 Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 15|Botiquín: No|Armas: 0|Protecciones: 0|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 20|Botiquín: No|Armas: 0|Protecciones: 5|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 20|Botiquín: No|Armas: 0|Protecciones: 5|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 20|Botiquín: No|Armas: 0|Protecciones: 5|
+Resultado: Ganaste|Dificultad: Facil|Habitación: 5|Vidas: 20|Botiquín: No|Armas: 0|Protecciones: 5|

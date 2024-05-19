@@ -199,7 +199,7 @@ public class Juego extends JDialog {
         lblFondo.setIcon(new ImageIcon(Juego.class.getResource("/imagenes/fondo1.jpeg")));
         lblFondo.setBounds(0, 0, 654, 361);
         panel.add(lblFondo);
-        setVisible(true);
+        lblFondo.setVisible(true);
 
         actualizarInfoMostrada(); // Actualizar los campos de texto con la información inicial
     }

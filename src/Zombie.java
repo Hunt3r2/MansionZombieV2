@@ -39,4 +39,8 @@ public class Zombie {
     public void recibirAtaque(int cantidad) {
         vida -= cantidad;
     }
+    
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
 }

@@ -119,7 +119,6 @@ public class Main extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 File archivo = new File("partida.dat");
                 if (archivo.exists()) {
-                    // Utiliza el JFrame existente de la ventana principal
                     Juego juego = new Juego(Main.this, CantidadDeHabitaciones);
                     Juego juegoCargado = Juego.cargarPartida(juego);
                     if (juegoCargado != null) {
